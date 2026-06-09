@@ -1059,7 +1059,7 @@ class SalesService {
       final db = await DatabaseService.instance.database;
       late SaleRecord savedSale;
 
-      await db.transaction((txn) async {
+      await db.transaction(txn) async {
         // Inventory quantity ghataao
         await txn.update(
           'inventory',
@@ -1104,7 +1104,6 @@ class SalesService {
           soldAt: sale.soldAt,
           isSynced: false,
         );
-      });
 
       // Excel update karo
       await ExcelService.instance.updateExcelFile();
