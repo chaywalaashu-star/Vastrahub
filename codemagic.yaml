@@ -8,6 +8,8 @@ workflows:
     scripts:
       - name: Get packages
         script: flutter pub get
+      - name: Analyze (warnings allowed)
+        script: flutter analyze --no-fatal-infos --no-fatal-warnings || true
       - name: Build APK
         script: flutter build apk --release --no-shrink
     artifacts:
