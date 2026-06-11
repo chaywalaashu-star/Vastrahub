@@ -1,4 +1,4 @@
-# ============================================
+=======================================
 # FILE PATH: .github/workflows/build-apk.yml
 # Ye file GitHub pe APK banata hai — FREE!
 # ============================================
@@ -67,6 +67,4 @@ jobs:
       - name: Build Success!
         run: |
           echo "✅ APK build successful!"
-          echo "📱 Download karne ke liye:"
-          echo "   GitHub → Actions tab → Latest run → Artifacts"
-          ls -la build/app/outputs/flutter-apk/
+          echo "📱 Download
