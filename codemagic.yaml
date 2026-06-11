@@ -6,11 +6,27 @@ workflows:
       flutter: 3.24.0
       java: 17
     scripts:
+      - name: Save our files
+        script: |
+          mkdir -p /tmp/bk
+          cp lib/main.dart /tmp/bk/main.dart
+          cp lib/backend.dart /tmp/bk/backend.dart
+          cp pubspec.yaml /tmp/bk/pubspec.yaml
+
+      - name: Generate android folder
+        script: flutter create . --platforms android --org com.clothing.manager
+
+      - name: Restore our files
+        script: |
+          cp /tmp/bk/main.dart lib/main.dart
+          cp /tmp/bk/backend.dart lib/backend.dart
+          cp /tmp/bk/pubspec.yaml pubspec.yaml
+
       - name: Get packages
         script: flutter pub get
-      - name: Analyze (warnings allowed)
-        script: flutter analyze --no-fatal-infos --no-fatal-warnings || true
+
       - name: Build APK
         script: flutter build apk --release --no-shrink
+
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
