@@ -1,0 +1,72 @@
+# ============================================
+# FILE PATH: .github/workflows/build-apk.yml
+# Ye file GitHub pe APK banata hai — FREE!
+# ============================================
+
+name: Build APK
+
+# Jab bhi code push karo — APK automatically banega
+on:
+  push:
+    branches: [ main, master ]
+  # Ya manually bhi trigger kar sakte ho
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Build Flutter APK
+    runs-on: ubuntu-latest   # GitHub ka free Linux computer
+
+    steps:
+      # Step 1: Code download karo
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Java setup (Android ke liye zaroori)
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Step 3: Flutter install karo
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true   # Fast build ke liye cache
+
+      # Step 4: Flutter version check (debug ke liye)
+      - name: Flutter Version
+        run: flutter --version
+
+      # Step 5: Packages download karo
+      - name: Get Dependencies
+        run: flutter pub get
+
+      # Step 6: Code analyze karo (errors check)
+      - name: Analyze Code
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true   # Error aaye to bhi aage chalo
+
+      # Step 7: APK banao (release version)
+      - name: Build Release APK
+        run: flutter build apk --release --no-shrink
+
+      # Step 8: APK ko download ke liye upload karo
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: clothing-manager-apk
+          # APK yahan milti hai Flutter mein
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30    # 30 din tak download kar sakte ho
+
+      # Step 9: Build info print karo
+      - name: Build Success!
+        run: |
+          echo "✅ APK build successful!"
+          echo "📱 Download karne ke liye:"
+          echo "   GitHub → Actions tab → Latest run → Artifacts"
+          ls -la build/app/outputs/flutter-apk/
