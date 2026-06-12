@@ -3,29 +3,37 @@ workflows:
     name: Android Release APK
     max_build_duration: 60
     environment:
-      flutter: 3.24.0
+      flutter: 3.27.0
       java: 17
     scripts:
-      - name: Save our files
+      - name: Step 1 - Backup files
         script: |
           mkdir -p /tmp/bk
-          cp lib/main.dart /tmp/bk/main.dart
-          cp lib/backend.dart /tmp/bk/backend.dart
-          cp pubspec.yaml /tmp/bk/pubspec.yaml
+          cp lib/main.dart /tmp/bk/
+          cp lib/backend.dart /tmp/bk/
+          cp pubspec.yaml /tmp/bk/
 
-      - name: Generate android folder
-        script: flutter create . --platforms android --org com.clothing.manager
+      - name: Step 2 - Create android folder
+        script: |
+          flutter create /tmp/new_project --platforms android --org com.clothing.manager
+          cp -r /tmp/new_project/android ./android
 
-      - name: Restore our files
+      - name: Step 3 - Fix Kotlin version
+        script: |
+          sed -i 's/id "org.jetbrains.kotlin.android" version "[0-9.]*"/id "org.jetbrains.kotlin.android" version "2.0.21"/' android/settings.gradle
+          echo "Kotlin version updated:"
+          grep kotlin android/settings.gradle
+
+      - name: Step 4 - Restore files
         script: |
           cp /tmp/bk/main.dart lib/main.dart
           cp /tmp/bk/backend.dart lib/backend.dart
           cp /tmp/bk/pubspec.yaml pubspec.yaml
 
-      - name: Get packages
+      - name: Step 5 - Get packages
         script: flutter pub get
 
-      - name: Build APK
+      - name: Step 6 - Build APK
         script: flutter build apk --release --no-shrink
 
     artifacts:
