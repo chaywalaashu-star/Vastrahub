@@ -46,7 +46,7 @@ class AppConfig {
   /// Apne server ka base URL — trailing slash mat dalo
   /// Example: 'https://yourapi.com/api'
   /// Local test ke liye: 'http://192.168.1.x:3000/api'
-  static const String apiBaseUrl = 'https://YOUR_SERVER_URL/api';
+  static const String apiBaseUrl = 'https://docs.google.com/spreadsheets/d/1d-OgpMWAhrQNzWmPcesYru4sHBNxPFAsylvvXC5o8f8/edit?usp=drivesdk/naGNnxBxebRHPoguD';
 
   /// JWT token expire time (hours)
   static const int tokenExpiryHours = 24;
