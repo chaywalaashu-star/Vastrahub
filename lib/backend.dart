@@ -46,7 +46,7 @@ import 'package:permission_handler/permission_handler.dart';
 class AppConfig {
   // Google Apps Script URL — Users sheet se connected
   static const String scriptUrl =
-      'https://script.google.com/macros/s/AKfycbwHepJisSRih3z1cowr2QGlQ6iBCVfk1Y0UFhER2qX0rjWHbKtQ7hqt0hivWD8r0fleyA/exec';
+      'https://script.google.com/macros/s/AKfycbxNKBurECKeIvwAq1wddUPxfnF6jsOBXoZGE36giFLk11ZYcTMvwfyjy0GEVvUbkMny/exec';
 
   // Stub — purane code ke liye (use nahi hota)
   static const String apiBaseUrl = '';
