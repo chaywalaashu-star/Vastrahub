@@ -1,0 +1,97 @@
+workflows:
+  android-release:
+    name: Android Release APK
+    max_build_duration: 60
+    environment:
+      flutter: 3.27.0
+      java: 17
+    scripts:
+      - name: Step 1 - Save files
+        script: |
+          mkdir -p /tmp/bk
+          cp lib/main.dart /tmp/bk/
+          cp lib/backend.dart /tmp/bk/
+          cp pubspec.yaml /tmp/bk/
+
+      - name: Step 2 - Generate android folder
+        script: |
+          flutter create /tmp/new_project --platforms android --org com.clothing.manager
+          cp -r /tmp/new_project/android ./android
+
+      - name: Step 3 - Fix Kotlin version
+        script: |
+          perl -i -pe 's/id "org.jetbrains.kotlin.android" version "[0-9.]+"/id "org.jetbrains.kotlin.android" version "2.0.21"/g' android/settings.gradle
+          echo "Kotlin version fixed:"
+          grep kotlin android/settings.gradle
+
+      - name: Step 4 - Setup AndroidManifest with all permissions
+        script: |
+          cat > android/app/src/main/AndroidManifest.xml << 'MANIFEST'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+              <!-- Internet — login + sync -->
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+              <!-- Camera — QR scanner ke liye -->
+              <uses-permission android:name="android.permission.CAMERA"/>
+              <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+              <!-- Storage — Excel file save/load -->
+              <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+                  android:maxSdkVersion="32"/>
+              <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                  android:maxSdkVersion="29"/>
+              <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+              <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+              <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+
+              <application
+                  android:label="Clothing Manager"
+                  android:name="${applicationName}"
+                  android:icon="@mipmap/ic_launcher"
+                  android:requestLegacyExternalStorage="true">
+
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true"
+                      android:launchMode="singleTop"
+                      android:taskAffinity=""
+                      android:theme="@style/LaunchTheme"
+                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+                      android:hardwareAccelerated="true"
+                      android:windowSoftInputMode="adjustResize">
+
+                      <meta-data
+                          android:name="io.flutter.embedding.android.NormalTheme"
+                          android:resource="@style/NormalTheme"/>
+
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+
+                  <meta-data
+                      android:name="flutterEmbedding"
+                      android:value="2"/>
+              </application>
+          </manifest>
+          MANIFEST
+          echo "Manifest ready!"
+          cat android/app/src/main/AndroidManifest.xml
+
+      - name: Step 5 - Restore our files
+        script: |
+          cp /tmp/bk/main.dart lib/main.dart
+          cp /tmp/bk/backend.dart lib/backend.dart
+          cp /tmp/bk/pubspec.yaml pubspec.yaml
+
+      - name: Step 6 - Get packages
+        script: flutter pub get
+
+      - name: Step 7 - Build APK
+        script: flutter build apk --release --no-shrink
+
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
