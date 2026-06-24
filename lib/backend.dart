@@ -636,7 +636,7 @@ class AuthService {
 
   // Google Apps Script URL
   static const _scriptUrl =
-      'https://script.google.com/macros/s/AKfycbwHepJisSRih3z1cowr2QGlQ6iBCVfk1Y0UFhER2qX0rjWHbKtQ7hqt0hivWD8r0fleyA/exec';
+      'https://script.google.com/macros/s/AKfycbxNKBurECKeIvwAq1wddUPxfnF6jsOBXoZGE36giFLk11ZYcTMvwfyjy0GEVvUbkMny/exec';
 
   UserSession? _currentSession;
   UserSession? get currentSession => _currentSession;
