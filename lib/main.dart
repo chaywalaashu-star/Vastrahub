@@ -1362,7 +1362,7 @@ class _WorkerScannerScreenState extends State<WorkerScannerScreen> with SingleTi
                   fillColor: Colors.white12, filled: true,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                   suffixIcon: IconButton(icon: const Icon(Icons.search_rounded, color: AppColors.red), onPressed: () => _onType(_ctrl.text)))),
-            ))),
+            ]))),
           ])));
     ]));
 }
